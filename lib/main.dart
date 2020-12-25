@@ -181,19 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class _btpicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var deviceName = [];
-
-    void showList() {
-      ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: deviceName.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 50,
-              child: Center(child: Text('${deviceName[index]}')),
-            );
-          });
-    }
+    var deviceName = [""];
 
     void getDevices() {
       FlutterBlue flutterBlue = FlutterBlue.instance;
@@ -208,16 +196,11 @@ class _btpicker extends StatelessWidget {
       });
       flutterBlue.stopScan();
 
-      if (deviceName.length == 0) {
-        deviceName = [];
-      }
-
       print(deviceName);
     }
 
-    void setState() {
-      deviceName.add('');
-    }
+    void setState() {}
+      //deviceName.add('');
 
     //void _onItemTapped(int index) {
     //if (index == 0) {
@@ -241,18 +224,19 @@ class _btpicker extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   child: Text('Show list'),
-                  onPressed: () => setState(),
+                  onPressed: () {
+                     setState();
+                  }
                 ),
               ),
               Container(
+                  height: 200,
                   width: double.infinity,
                   child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
                       itemCount: deviceName.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 50,
-                          child: Center(child: Text('${deviceName[index]}')),
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(deviceName[index]),
                         );
                       }))
             ])));
