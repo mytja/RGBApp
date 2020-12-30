@@ -6,3 +6,4 @@ RGBApp is an app to comunicate with your RGB LED lamp easily through UI with mul
 
 # Download this app
 This app uses GitHub Actions to build apks. Each time commit is pushed, an APK will be built!
+
