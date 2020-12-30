@@ -178,67 +178,98 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// ignore: camel_case_types
 class _btpicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var deviceName = [""];
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
-    void getDevices() {
-      FlutterBlue flutterBlue = FlutterBlue.instance;
-      flutterBlue.startScan(timeout: Duration(seconds: 4));
+    var deviceName = [];
 
-      // this line will start scanning bluetooth devices
-      // ignore: cancel_subscriptions
+    FlutterBlue flutterBlue = FlutterBlue.instance;
+
+    Future<List> _getData() async {
+      await flutterBlue.startScan(timeout: Duration(seconds: 7));
+
       flutterBlue.scanResults.listen((results) {
         for (ScanResult r in results) {
           deviceName.add(r.device.name);
         }
       });
-      flutterBlue.stopScan();
 
-      print(deviceName);
+      //flutterBlue.stopScan();
+
+      return deviceName.toList();
     }
 
-    void setState() {}
-      //deviceName.add('');
-
-    //void _onItemTapped(int index) {
-    //if (index == 0) {
-    //Navigator.push(
-    //context,
-    //MaterialPageRoute(builder: (context) => _MyHomePageState()),
-    //);
-    //}
-    //}
-
-    return MaterialApp(
-        title: "RGBApp",
-        home: Scaffold(
-            appBar: AppBar(title: const Text("RGBApp")),
-            body: Column(children: <Widget>[
-              Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      child: Text('SCAN'), onPressed: () => {getDevices()})),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: Text('Show list'),
-                  onPressed: () {
-                     setState();
-                  }
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.headline2,
+      textAlign: TextAlign.center,
+      child: FutureBuilder<List>(
+        future: _getData(), // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            var snapdata = snapshot.data;
+            print(snapdata);
+            children = <Widget>[
+              Expanded(
+                child: ListView.builder(
+                  itemCount: snapdata.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        '${snapdata[index]}',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {},
+                    );
+                  },
                 ),
               ),
-              Container(
-                  height: 200,
-                  width: double.infinity,
-                  child: ListView.builder(
-                      itemCount: deviceName.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(deviceName[index]),
-                        );
-                      }))
-            ])));
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = <Widget>[
+              SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text(
+                  'Searching for devices! Please wait...',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
+          );
+        },
+      ),
+    );
   }
 }
