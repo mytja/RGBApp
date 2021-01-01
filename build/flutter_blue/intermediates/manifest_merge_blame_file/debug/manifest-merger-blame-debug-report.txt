@@ -1,0 +1,18 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.pauldemarco.flutter_blue" >
+4
+5    <uses-sdk android:minSdkVersion="19" />
+5-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+6
+7    <uses-permission android:name="android.permission.BLUETOOTH" />
+7-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:3:3-66
+7-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:3:20-63
+8    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+8-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:4:3-72
+8-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:4:20-69
+9    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+9-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:5:3-76
+9-->D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:5:20-74
+10
+11</manifest>

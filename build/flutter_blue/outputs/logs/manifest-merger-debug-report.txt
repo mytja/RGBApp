@@ -1,0 +1,31 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:1:1-6:12
+	package
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:2:3-41
+		INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:1:11-69
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:3:3-66
+	android:name
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:3:20-63
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:4:3-72
+	android:name
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:4:20-69
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:5:3-76
+	android:name
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml:5:20-74
+uses-sdk
+INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudio\SKD\flutter\.pub-cache\hosted\pub.dartlang.org\flutter_blue-0.7.3\android\src\main\AndroidManifest.xml
