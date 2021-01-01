@@ -205,7 +205,6 @@ class _btpicker extends StatelessWidget {
       //flutterBlue.stopScan();
 
       return deviceName;
-    }
 
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
