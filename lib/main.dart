@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({this.services, key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -47,24 +49,25 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final List services;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double SVR = 0;
-  double SVG = 0;
-  double SVB = 0;
-
-  double Smin = 0;
-  double Smax = 255;
-  int Sdiv = 255;
-
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    double SVR = 0;
+    double SVG = 0;
+    double SVB = 0;
+
+    double Smin = 0;
+    double Smax = 255;
+    int Sdiv = 255;
+
+    int _selectedIndex = 0;
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -187,11 +190,11 @@ class BTConnect {
     device.connect();
   }
 
-  static void send(int r, int g, int b) {
+  static void send(int r, int g, int b) async {
     var toSend = r.toString() + " " + g.toString() + " " + b.toString();
     BluetoothCharacteristic c;
     var utfChar = utf8.encode(toSend);
-    c.write(utfChar);
+    await c.write(utfChar);
   }
 }
 
@@ -201,6 +204,8 @@ class _btpicker extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    int indexData;
 
     Future<List> _getData() async {
       List deviceName = [];
@@ -246,12 +251,28 @@ class _btpicker extends StatelessWidget {
                         ),
                         onTap: () {
                           BTConnect.connectTo(index, snapdata);
+                          indexData = index;
                         },
                       );
                     },
                   ),
                 ),
               ),
+              Container(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyHomePage(
+                              services: snapdata[indexData].discoverServices()),
+                        ));
+                  },
+                  child: Text('Go back'),
+                ),
+              )
             ];
           } else if (snapshot.hasError) {
             children = <Widget>[
