@@ -1,6 +1,8 @@
 name: Flutter build
 
-on: push: branches: development
+on:
+  push:
+    branches: development
 
 jobs:
   version:
