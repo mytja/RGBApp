@@ -64,7 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-<<<<<<< HEAD
   crypto:
     dependency: transitive
     description:
@@ -72,8 +71,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-=======
->>>>>>> refs/remotes/RGBApp/development
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -107,7 +104,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.3"
-<<<<<<< HEAD
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -115,14 +111,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
-=======
->>>>>>> refs/remotes/RGBApp/development
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
   image:
     dependency: transitive
     description:
@@ -130,8 +123,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.19"
-=======
->>>>>>> refs/remotes/RGBApp/development
   matcher:
     dependency: transitive
     description:
@@ -153,7 +144,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.1"
-<<<<<<< HEAD
   petitparser:
     dependency: transitive
     description:
@@ -161,8 +151,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-=======
->>>>>>> refs/remotes/RGBApp/development
   protobuf:
     dependency: transitive
     description:
@@ -238,7 +226,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-<<<<<<< HEAD
   xml:
     dependency: transitive
     description:
@@ -253,8 +240,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
-=======
->>>>>>> refs/remotes/RGBApp/development
 sdks:
   dart: ">=2.10.0-110 <2.11.0"
   flutter: ">=1.12.13+hotfix.6 <2.0.0"

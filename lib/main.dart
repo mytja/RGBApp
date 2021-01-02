@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
@@ -121,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVR = value;
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
                       });
                     },
                   ),
@@ -139,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVG = value;
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
                       });
                     },
                   ),
@@ -157,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVB = value;
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
                       });
                     },
                   ),
@@ -180,6 +185,13 @@ class BTConnect {
     print("Trying to connect!");
     BluetoothDevice device = snapdata[index];
     device.connect();
+  }
+
+  static void send(int r, int g, int b) {
+    var toSend = r.toString() + " " + g.toString() + " " + b.toString();
+    BluetoothCharacteristic c;
+    var utfChar = utf8.encode(toSend);
+    c.write(utfChar);
   }
 }
 
@@ -205,6 +217,7 @@ class _btpicker extends StatelessWidget {
       //flutterBlue.stopScan();
 
       return deviceName;
+    }
 
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
