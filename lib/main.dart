@@ -9,6 +9,9 @@ void main() {
   runApp(MyApp());
 }
 
+List globalDev;
+bool connected = false;
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -66,6 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
     double Smax = 255;
     int Sdiv = 255;
 
+    List<BluetoothService> service;
+    BluetoothCharacteristic c = service.characteristics;
+
     int _selectedIndex = 0;
 
     double width = MediaQuery.of(context).size.width;
@@ -78,6 +84,13 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(builder: (context) => _btpicker()),
         );
       }
+    }
+    
+    if (connected == false && globalDev != null){
+      BTConnect.connectTo(globalDev);
+      List<BluetoothService> service = device.discoverServices();
+      connected = true;
+
     }
 
     return MaterialApp(
@@ -184,7 +197,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class BTConnect {
-  static void connectTo(int index, List snapdata) {
+  static void connectTo(List snapdata) {
+    print("Trying to connect!");
+    BluetoothDevice device = snapdata;
+    device.connect();
+  }
+
+  static void connectToUsingSnapdata(int index, List snapdata) {
     print("Trying to connect!");
     BluetoothDevice device = snapdata[index];
     device.connect();
@@ -250,7 +269,7 @@ class _btpicker extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          BTConnect.connectTo(index, snapdata);
+                          final globalDev = snapdata[index];
                           indexData = index;
                         },
                       );
