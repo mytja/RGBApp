@@ -9,7 +9,7 @@ void main() {
   runApp(MyApp());
 }
 
-List<BluetoothDevice> globalDev;
+var globalDev;
 bool connected = false;
 
 class MyApp extends StatelessWidget {
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     int Sdiv = 255;
 
     List<BluetoothService> service;
-    c<BluetoothCharacteristic> = service.characteristics;
+    var c = service.characteristics;
 
     int _selectedIndex = 0;
 
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVR = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVG = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVB = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt());
+                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -209,9 +209,8 @@ class BTConnect {
     device.connect();
   }
 
-  static void send(int r, int g, int b) async {
+  static void send(int r, int g, int b, var c) async {
     var toSend = r.toString() + " " + g.toString() + " " + b.toString();
-    BluetoothCharacteristic c;
     var utfChar = utf8.encode(toSend);
     await c.write(utfChar);
   }
