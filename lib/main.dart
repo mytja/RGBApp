@@ -9,7 +9,7 @@ void main() {
   runApp(MyApp());
 }
 
-List globalDev;
+List<BluetoothDevice> globalDev;
 bool connected = false;
 
 class MyApp extends StatelessWidget {
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     int Sdiv = 255;
 
     List<BluetoothService> service;
-    BluetoothCharacteristic c = service.characteristics;
+    c<BluetoothCharacteristic> = service.characteristics;
 
     int _selectedIndex = 0;
 
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     
     if (connected == false && globalDev != null){
       BTConnect.connectTo(globalDev);
-      List<BluetoothService> service = device.discoverServices();
+      List<BluetoothService> service = globalDev.discoverServices();
       connected = true;
 
     }
