@@ -11,6 +11,7 @@ void main() {
 
 var globalDev;
 bool connected = false;
+int indexData;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -58,6 +59,10 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+class privateGlobs {
+  static List<BluetoothCharacteristic> c;
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -69,8 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
     double Smax = 255;
     int Sdiv = 255;
 
-    List<BluetoothService> service;
-    var c = service.characteristics;
+    var c;
+
+    List<BluetoothService> services = globalDev.discoverServices();
+    services.forEach((service) {
+      privateGlobs.c = service.characteristics;
+    });
 
     int _selectedIndex = 0;
 
@@ -85,12 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }
     }
-    
-    if (connected == false && globalDev != null){
-      BTConnect.connectTo(globalDev);
-      List<BluetoothService> service = globalDev.discoverServices();
-      connected = true;
 
+    if (connected == false && globalDev != null) {
+      BTConnect.connectTo(indexData, globalDev);
+      List<BluetoothService> services = globalDev.discoverServices();
+      services.forEach((service) {
+        privateGlobs.c = service.characteristics;
+      });
+      connected = true;
     }
 
     return MaterialApp(
@@ -139,7 +150,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVR = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                        BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -158,7 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVG = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                        BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -177,7 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         SVB = value;
-                        BTConnect.send(SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                        BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
                       });
                     },
                   ),
@@ -197,13 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class BTConnect {
-  static void connectTo(List snapdata) {
-    print("Trying to connect!");
-    BluetoothDevice device = snapdata;
-    device.connect();
-  }
-
-  static void connectToUsingSnapdata(int index, List snapdata) {
+  static void connectTo(int index, List snapdata) {
     print("Trying to connect!");
     BluetoothDevice device = snapdata[index];
     device.connect();
@@ -268,7 +276,7 @@ class _btpicker extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          final globalDev = snapdata[index];
+                          globalDev = snapdata;
                           indexData = index;
                         },
                       );
