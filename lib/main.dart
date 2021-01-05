@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -8,10 +6,6 @@ import 'package:flutter_blue/flutter_blue.dart';
 void main() {
   runApp(MyApp());
 }
-
-var globalDev;
-bool connected = false;
-int indexData;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -41,7 +35,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({this.services, key, this.title}) : super(key: key);
+  MyHomePage({this.connected, this.globalDev, this.c, key, this.title})
+      : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -53,14 +48,12 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  final List services;
+  final BluetoothDevice globalDev;
+  final bool connected;
+  final c;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-}
-
-class privateGlobs {
-  static List<BluetoothCharacteristic> c;
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -73,13 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
     double Smin = 0;
     double Smax = 255;
     int Sdiv = 255;
-
-    var c;
-
-    List<BluetoothService> services = globalDev.discoverServices();
-    services.forEach((service) {
-      privateGlobs.c = service.characteristics;
-    });
 
     int _selectedIndex = 0;
 
@@ -95,14 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    if (connected == false && globalDev != null) {
-      BTConnect.connectTo(indexData, globalDev);
-      List<BluetoothService> services = globalDev.discoverServices();
-      services.forEach((service) {
-        privateGlobs.c = service.characteristics;
-      });
-      connected = true;
-    }
+    if (widget.connected == true) {}
 
     return MaterialApp(
       title: 'RGBApp',
@@ -151,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         SVR = value;
                         BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
                       });
                     },
                   ),
@@ -171,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         SVG = value;
                         BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
                       });
                     },
                   ),
@@ -191,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         SVB = value;
                         BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), c);
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
                       });
                     },
                   ),
@@ -211,7 +190,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class BTConnect {
-  static void connectTo(int index, List snapdata) {
+  static void connectTo(BluetoothDevice snapdata) {
+    print("Trying to connect!");
+    BluetoothDevice device = snapdata;
+    device.connect();
+  }
+
+  static void connectTo2(int index, List snapdata) {
     print("Trying to connect!");
     BluetoothDevice device = snapdata[index];
     device.connect();
@@ -230,8 +215,6 @@ class _btpicker extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
-    int indexData;
 
     Future<List> _getData() async {
       List deviceName = [];
@@ -276,29 +259,31 @@ class _btpicker extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          globalDev = snapdata;
-                          indexData = index;
+                          var btdevice = snapdata[index];
+                          BTConnect.connectTo(btdevice);
+                          var services = btdevice.discoverServices();
+                          var c;
+                          services.forEach((service) {
+                            c = service.characteristics;
+                          });
+
+                          bool connected = true;
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyHomePage(
+                                  connected: connected,
+                                  globalDev: btdevice,
+                                  c: c),
+                            ),
+                          );
                         },
                       );
                     },
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyHomePage(
-                              services: snapdata[indexData].discoverServices()),
-                        ));
-                  },
-                  child: Text('Go back'),
-                ),
-              )
             ];
           } else if (snapshot.hasError) {
             children = <Widget>[
