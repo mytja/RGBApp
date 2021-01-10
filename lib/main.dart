@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -57,20 +58,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // ignore: non_constant_identifier_names
+  double SVR = 0;
+  // ignore: non_constant_identifier_names
+  double SVG = 0;
+  // ignore: non_constant_identifier_names
+  double SVB = 0;
+
   @override
   Widget build(BuildContext context) {
-    double SVR = 0;
-    double SVG = 0;
-    double SVB = 0;
-
+    print("Characteristics:");
+    print(widget.c);
+    // ignore: non_constant_identifier_names
     double Smin = 0;
+    // ignore: non_constant_identifier_names
     double Smax = 255;
+    // ignore: non_constant_identifier_names
     int Sdiv = 255;
 
     int _selectedIndex = 0;
 
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     void _onItemTapped(int index) {
       if (index == 1) {
@@ -80,8 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }
     }
-
-    if (widget.connected == true) {}
 
     return MaterialApp(
       title: 'RGBApp',
@@ -121,19 +127,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVR,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVR.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVR,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVR.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVR = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVR = value;
-                        BTConnect.send(
+                        await BTConnect.send(
                             SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
-                      });
-                    },
-                  ),
+                      }),
                 ),
               ]),
               Row(children: <Widget>[
@@ -141,19 +149,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVG,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVG.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVG,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVG.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVG = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVG = value;
-                        BTConnect.send(
+                        await BTConnect.send(
                             SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
-                      });
-                    },
-                  ),
+                      }),
                 ),
               ]),
               Row(children: <Widget>[
@@ -161,19 +171,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVB,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVB.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVB,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVB.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVB = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVB = value;
-                        BTConnect.send(
+                        await BTConnect.send(
                             SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
-                      });
-                    },
-                  ),
+                      }),
                 ),
               ]),
               //Row(
@@ -190,10 +202,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class BTConnect {
-  static void connectTo(BluetoothDevice snapdata) {
+  static void connectTo(BluetoothDevice snapdata) async {
     print("Trying to connect!");
     BluetoothDevice device = snapdata;
-    device.connect();
+    await device.connect();
   }
 
   static void connectTo2(int index, List snapdata) {
@@ -204,8 +216,12 @@ class BTConnect {
 
   static void send(int r, int g, int b, var c) async {
     var toSend = r.toString() + " " + g.toString() + " " + b.toString();
+    print("Values to send: ");
+    print(toSend);
     var utfChar = utf8.encode(toSend);
-    await c.write(utfChar);
+    for (BluetoothCharacteristic chars in c) {
+      await chars.write(utfChar);
+    }
   }
 }
 
@@ -213,7 +229,6 @@ class BTConnect {
 class _btpicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     Future<List> _getData() async {
@@ -258,10 +273,11 @@ class _btpicker extends StatelessWidget {
                             color: Colors.black,
                           ),
                         ),
-                        onTap: () {
-                          var btdevice = snapdata[index];
-                          BTConnect.connectTo(btdevice);
-                          var services = btdevice.discoverServices();
+                        onTap: () async {
+                          BluetoothDevice btdevice = snapdata[index];
+                          await BTConnect.connectTo(btdevice);
+                          List<BluetoothService> services =
+                              await btdevice.discoverServices();
                           var c;
                           services.forEach((service) {
                             c = service.characteristics;
@@ -294,7 +310,12 @@ class _btpicker extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               )
             ];
           } else {
