@@ -1,4 +1,4 @@
-name: Flutter build
+name: Build APK
 
 on: 
   push:
@@ -20,8 +20,9 @@ jobs:
     - run: flutter pub get
 
     - run: flutter build apk --release --split-per-abi
+    
     - run: flutter build appbundle
-    - name: Create a Release in GitHub
+      
     - uses: actions/upload-artifact@v1
       with:
         name: Release APK
