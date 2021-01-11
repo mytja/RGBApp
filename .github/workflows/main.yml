@@ -25,19 +25,16 @@ jobs:
     
     - run: flutter build apk
       
-    - name: Upload AAB
     - uses: actions/upload-artifact@v1
       with:
         name: Upload AAB
         path: build/app/outputs/apk/release/app-release.aab
         
-    - name: Upload APK
     - uses: actions/upload-artifact@v1
       with:
         name: Upload APK
         path: build/app/outputs/apk/release/app-armeabi-v7a-release.apk
     
-    - name: Upload fat APK
     - uses: actions/upload-artifact@v1
       with:
         name: Upload fat APK
