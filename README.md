@@ -1,16 +1,9 @@
-# rgbapp
+# RGBApp
 
-RGBApp
+RGBApp is an open-source Flutter based app built to run on multiple platforms, like iOS, Android, Windows...
 
-## Getting Started
+RGBApp is an app to comunicate with your RGB LED lamp easily through UI with multiple connections (Bluetooth, [HAM](https://github.com/mytja/HAM)...) and parsing types (RGBApp parser, minus parser...)
 
-This project is a starting point for a Flutter application.
+# Download this app
+This app uses GitHub Actions to build apks. Each time commit is pushed, an APK will be built!
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

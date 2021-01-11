@@ -1,8 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:rgbapp/bt.dart';
-import 'package:rgbapp/globals.dart' as globals;
 import 'package:flutter_blue/flutter_blue.dart';
-import 'dart:io';
 
 void main() {
   runApp(MyApp());
@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({this.connected, this.globalDev, this.c, key, this.title})
+      : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,26 +49,36 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final BluetoothDevice globalDev;
+  final bool connected;
+  final c;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // ignore: non_constant_identifier_names
   double SVR = 0;
+  // ignore: non_constant_identifier_names
   double SVG = 0;
+  // ignore: non_constant_identifier_names
   double SVB = 0;
-
-  double Smin = 0;
-  double Smax = 255;
-  int Sdiv = 255;
-
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    print("Characteristics:");
+    print(widget.c);
+    // ignore: non_constant_identifier_names
+    double Smin = 0;
+    // ignore: non_constant_identifier_names
+    double Smax = 255;
+    // ignore: non_constant_identifier_names
+    int Sdiv = 255;
+
+    int _selectedIndex = 0;
+
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     void _onItemTapped(int index) {
       if (index == 1) {
@@ -116,17 +127,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVR,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVR.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVR,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVR.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVR = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVR = value;
-                      });
-                    },
-                  ),
+                        await BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                      }),
                 ),
               ]),
               Row(children: <Widget>[
@@ -134,17 +149,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVG,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVG.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVG,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVG.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVG = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVG = value;
-                      });
-                    },
-                  ),
+                        await BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                      }),
                 ),
               ]),
               Row(children: <Widget>[
@@ -152,17 +171,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   width: width - 75,
                   child: Slider(
-                    value: SVB,
-                    min: Smin,
-                    max: Smax,
-                    divisions: Sdiv,
-                    label: SVB.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
+                      value: SVB,
+                      min: Smin,
+                      max: Smax,
+                      divisions: Sdiv,
+                      label: SVB.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          SVB = value;
+                        });
+                      },
+                      onChangeEnd: (double value) async {
                         SVB = value;
-                      });
-                    },
-                  ),
+                        await BTConnect.send(
+                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                      }),
                 ),
               ]),
               //Row(
@@ -178,83 +201,150 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class BTConnect {
+  static void connectTo(BluetoothDevice snapdata) async {
+    print("Trying to connect!");
+    BluetoothDevice device = snapdata;
+    await device.connect();
+  }
+
+  static void connectTo2(int index, List snapdata) {
+    print("Trying to connect!");
+    BluetoothDevice device = snapdata[index];
+    device.connect();
+  }
+
+  static void send(int r, int g, int b, var c) async {
+    var toSend = r.toString() + " " + g.toString() + " " + b.toString();
+    print("Values to send: ");
+    print(toSend);
+    var utfChar = utf8.encode(toSend);
+    for (BluetoothCharacteristic chars in c) {
+      await chars.write(utfChar);
+    }
+  }
+}
+
+// ignore: camel_case_types
 class _btpicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var deviceName = [];
+    double height = MediaQuery.of(context).size.height;
 
-    void showList() {
-      ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: deviceName.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 50,
-              child: Center(child: Text('${deviceName[index]}')),
-            );
-          });
-    }
-
-    void getDevices() {
+    Future<List> _getData() async {
+      List deviceName = [];
       FlutterBlue flutterBlue = FlutterBlue.instance;
-      flutterBlue.startScan(timeout: Duration(seconds: 4));
 
-      // this line will start scanning bluetooth devices
-      // ignore: cancel_subscriptions
+      await flutterBlue.startScan(timeout: Duration(seconds: 5));
+
       flutterBlue.scanResults.listen((results) {
         for (ScanResult r in results) {
-          deviceName.add(r.device.name);
+          deviceName.add(r.device);
         }
       });
-      flutterBlue.stopScan();
 
-      if (deviceName.length == 0) {
-        deviceName = [];
-      }
+      //flutterBlue.stopScan();
 
-      print(deviceName);
+      return deviceName;
     }
 
-    void setState() {
-      deviceName.add('');
-    }
-
-    //void _onItemTapped(int index) {
-    //if (index == 0) {
-    //Navigator.push(
-    //context,
-    //MaterialPageRoute(builder: (context) => _MyHomePageState()),
-    //);
-    //}
-    //}
-
-    return MaterialApp(
-        title: "RGBApp",
-        home: Scaffold(
-            appBar: AppBar(title: const Text("RGBApp")),
-            body: Column(children: <Widget>[
-              Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      child: Text('SCAN'), onPressed: () => {getDevices()})),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: Text('Show list'),
-                  onPressed: () => setState(),
-                ),
-              ),
-              Container(
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.headline2,
+      textAlign: TextAlign.center,
+      child: FutureBuilder<List>(
+        future: _getData(), // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+          List<Widget> children;
+          if (snapshot.hasData) {
+            var snapdata = snapshot.data;
+            print(snapdata);
+            children = <Widget>[
+              Material(
+                child: Container(
+                  height: height,
                   width: double.infinity,
                   child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: deviceName.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 50,
-                          child: Center(child: Text('${deviceName[index]}')),
-                        );
-                      }))
-            ])));
+                    itemCount: snapdata.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                          '${snapdata[index].name}',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () async {
+                          BluetoothDevice btdevice = snapdata[index];
+                          await BTConnect.connectTo(btdevice);
+                          List<BluetoothService> services =
+                              await btdevice.discoverServices();
+                          var c;
+                          services.forEach((service) {
+                            c = service.characteristics;
+                          });
+
+                          bool connected = true;
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyHomePage(
+                                  connected: connected,
+                                  globalDev: btdevice,
+                                  c: c),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              )
+            ];
+          } else {
+            children = <Widget>[
+              SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text(
+                  'Searching for devices! Please wait...',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
+          );
+        },
+      ),
+    );
   }
 }
