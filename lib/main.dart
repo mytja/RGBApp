@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (index == 2) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => _settings()),
+          MaterialPageRoute(builder: (context) => SettingsPage()),
         );
       }
     }
@@ -362,6 +362,8 @@ class _btpicker extends StatelessWidget {
   }
 }
 
+enum BitRes { seven, eight, nine }
+
 class FileModifier {
   void getJson() async {
     var file = await new File('settings.json').readAsString();
@@ -370,7 +372,12 @@ class FileModifier {
   }
 }
 
-class _settings extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  _settings createState() => _settings();
+}
+
+class _settings extends State<SettingsPage> {
+  BitRes bitres = BitRes.seven;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -383,13 +390,29 @@ class _settings extends StatelessWidget {
             Container(
               height: 25,
             ),
-            Text(s.res),
+            Text(s.res, style: TextStyle(fontWeight: FontWeight.bold)),
             ListTile(
               title: const Text('7'),
               leading: Radio(
-                value: 7,
-                groupValue: 0,
-                onChanged: (value) {},
+                value: BitRes.seven,
+                groupValue: bitres,
+                onChanged: (BitRes value) {
+                  setState(() {
+                    bitres = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('8'),
+              leading: Radio(
+                value: BitRes.eight,
+                groupValue: bitres,
+                onChanged: (BitRes value) {
+                  setState(() {
+                    bitres = value;
+                  });
+                },
               ),
             ),
           ],
