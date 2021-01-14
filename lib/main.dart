@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
+import 'strings.dart' as s;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -87,6 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(builder: (context) => _btpicker()),
         );
       }
+      if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => _settings()),
+        );
+      }
     }
 
     return MaterialApp(
@@ -102,10 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.bluetooth),
               label: 'Bluetooth Settings',
             ),
-            //BottomNavigationBarItem(
-            //icon: Icon(Icons.school),
-            //label: 'School',
-            //),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.amber[800],
@@ -116,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Container(
           width: double.infinity,
-          height: 250,
+          height: 254,
           margin: EdgeInsets.all(24),
           padding: EdgeInsets.only(top: 10, left: 15),
           //alignment: Alignment.center,
@@ -188,11 +195,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       }),
                 ),
               ]),
-              //Row(
-              //Container(
-
-              //),
-              //),
+              Container(height: 50),
+              Container(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.globalDev.disconnect();
+                        });
+                      },
+                      child: Text(s.disconnect)))
             ],
           ),
         ),
@@ -344,6 +357,43 @@ class _btpicker extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class FileModifier {
+  void getJson() async {
+    var file = await new File('settings.json').readAsString();
+    String jsonString = file;
+    return jsonDecode(jsonString);
+  }
+}
+
+class _settings extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: 25,
+            ),
+            Text(s.res),
+            ListTile(
+              title: const Text('7'),
+              leading: Radio(
+                value: 7,
+                groupValue: 0,
+                onChanged: (value) {},
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
