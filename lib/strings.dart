@@ -1,2 +1,10 @@
 const String disconnect = "DISCONNECT";
 const String res = "Resolution (in bits)";
+const String lang = "Language";
+const String lang_en = "English";
+const String lang_en_us = "USA";
+const String lang_sl = "slovenščina";
+const String lang_sl_si = "Slovenija";
+const String wnl = "With new line?";
+const String yes = "Yes";
+const String no = "No";

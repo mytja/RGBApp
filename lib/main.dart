@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'strings.dart' as s;
+import 'settings.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -68,8 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Characteristics:");
-    print(widget.c);
     // ignore: non_constant_identifier_names
     double Smin = 0;
     // ignore: non_constant_identifier_names
@@ -357,66 +355,6 @@ class _btpicker extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-enum BitRes { seven, eight, nine }
-
-class FileModifier {
-  void getJson() async {
-    var file = await new File('settings.json').readAsString();
-    String jsonString = file;
-    return jsonDecode(jsonString);
-  }
-}
-
-class SettingsPage extends StatefulWidget {
-  _settings createState() => _settings();
-}
-
-class _settings extends State<SettingsPage> {
-  BitRes bitres = BitRes.seven;
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              height: 25,
-            ),
-            Text(s.res, style: TextStyle(fontWeight: FontWeight.bold)),
-            ListTile(
-              title: const Text('7'),
-              leading: Radio(
-                value: BitRes.seven,
-                groupValue: bitres,
-                onChanged: (BitRes value) {
-                  setState(() {
-                    bitres = value;
-                  });
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('8'),
-              leading: Radio(
-                value: BitRes.eight,
-                groupValue: bitres,
-                onChanged: (BitRes value) {
-                  setState(() {
-                    bitres = value;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
