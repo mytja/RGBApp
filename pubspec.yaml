@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_blue:
-  path_provider:
+  shared_preferences:
 
 
   # The following adds the Cupertino Icons font to your application.

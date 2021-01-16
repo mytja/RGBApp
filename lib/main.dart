@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'strings.dart' as s;
 import 'settings.dart';
 
@@ -58,6 +61,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+// ignore: non_constant_identifier_names
+double Smin = 0;
+// ignore: non_constant_identifier_names
+double Smax = 255;
+// ignore: non_constant_identifier_names
+int Sdiv = 255;
+
 class _MyHomePageState extends State<MyHomePage> {
   // ignore: non_constant_identifier_names
   double SVR = 0;
@@ -68,12 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: non_constant_identifier_names
-    double Smin = 0;
-    // ignore: non_constant_identifier_names
-    double Smax = 255;
-    // ignore: non_constant_identifier_names
-    int Sdiv = 255;
+    s.updateGlobals();
 
     int _selectedIndex = 0;
 
@@ -92,6 +97,15 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(builder: (context) => SettingsPage()),
         );
       }
+    }
+
+    Future returnAll() async {
+      final prefs = await SharedPreferences.getInstance();
+      final name1 = prefs.getString('name') ?? 0;
+      final res1 = prefs.getInt('res') ?? 0;
+      final lang1 = prefs.getString('lang') ?? 0;
+      final wnl1 = prefs.getBool('wnl') ?? 0;
+      return [name1, res1, lang1, wnl1];
     }
 
     return MaterialApp(
@@ -128,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: <Widget>[
               Row(children: <Widget>[
-                Text("R"),
+                Text(s.r),
                 Container(
                   width: width - 75,
                   child: Slider(
@@ -144,13 +158,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       onChangeEnd: (double value) async {
                         SVR = value;
-                        await BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                        var retrn = await returnAll();
+                        await BTConnect.send(SVR.toInt(), SVG.toInt(),
+                            SVB.toInt(), widget.c, retrn[3]);
                       }),
                 ),
               ]),
               Row(children: <Widget>[
-                Text("G"),
+                Text(s.g),
                 Container(
                   width: width - 75,
                   child: Slider(
@@ -166,13 +181,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       onChangeEnd: (double value) async {
                         SVG = value;
-                        await BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                        var retrn = await returnAll();
+                        await BTConnect.send(SVR.toInt(), SVG.toInt(),
+                            SVB.toInt(), widget.c, retrn[3]);
                       }),
                 ),
               ]),
               Row(children: <Widget>[
-                Text("B"),
+                Text(s.b),
                 Container(
                   width: width - 75,
                   child: Slider(
@@ -188,8 +204,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       onChangeEnd: (double value) async {
                         SVB = value;
-                        await BTConnect.send(
-                            SVR.toInt(), SVG.toInt(), SVB.toInt(), widget.c);
+                        var retrn = await returnAll();
+                        await BTConnect.send(SVR.toInt(), SVG.toInt(),
+                            SVB.toInt(), widget.c, retrn[3]);
                       }),
                 ),
               ]),
@@ -225,8 +242,13 @@ class BTConnect {
     device.connect();
   }
 
-  static void send(int r, int g, int b, var c) async {
-    var toSend = r.toString() + " " + g.toString() + " " + b.toString();
+  static void send(int r, int g, int b, var c, bool nl) async {
+    String toSend;
+    if (nl == false) {
+      toSend = r.toString() + " " + g.toString() + " " + b.toString();
+    } else if (nl == true) {
+      toSend = r.toString() + " " + g.toString() + " " + b.toString() + "\n";
+    }
     print("Values to send: ");
     print(toSend);
     var utfChar = utf8.encode(toSend);
