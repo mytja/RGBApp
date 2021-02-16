@@ -10,7 +10,7 @@ import 'strings.dart' as s;
 import 'dart:convert';
 
 enum BitRes { seven, eight, nine, ten, eleven }
-enum Lang { en_us, sl_si }
+enum Lang { en_us, sl_si, tr_tr }
 enum WNL { y, n }
 
 class SettingsPage extends StatefulWidget {
@@ -130,6 +130,10 @@ class _settings extends State<SettingsPage> {
                   if (snapJSON[2] == "en_us") {
                     lng = Lang.en_us;
                   }
+                  
+                  if (snapJSON[2] == "tr_tr") {
+                    lng = Lang.tr_tr;
+                  }
 
                   if (snapJSON[3] == true) {
                     wnl1 = WNL.y;
@@ -227,6 +231,21 @@ class _settings extends State<SettingsPage> {
                               setState(() {
                                 lng = value;
                                 s.lang_v = "en_us";
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text(s.lang_tr),
+                          subtitle: const Text(s.lang_tr_tr),
+                          leading: Radio(
+                            value: Lang.tr_tr,
+                            groupValue: lng,
+                            onChanged: (Lang value) async {
+                              await changeKey("lang", "tr_tr");
+                              setState(() {
+                                lng = value;
+                                s.lang_v = "tr_tr";
                               });
                             },
                           ),
