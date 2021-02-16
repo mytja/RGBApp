@@ -6,7 +6,6 @@ const String lang_tr = "Turkish";
 const String lang_tr_tr = "Turkey";
 
 String lang_v = "en_us";
-String lang_v = "tr_tr"; 
 
 String wnl;
 String yes;
