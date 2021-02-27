@@ -4,6 +4,7 @@ const String lang_sl = "slovenščina";
 const String lang_sl_si = "Slovenija";
 const String lang_tr = "Turkish";
 const String lang_tr_tr = "Turkey";
+const String lang_pt_br = "Português"
 
 String lang_v = "en_us";
 
@@ -62,5 +63,18 @@ void updateGlobals() {
     btSettings = "Bluetooth Settings";
     settings = "Settings";
     home = "Home";
+  } else if (lang_v == 'pt_br') {
+    wnl = "Com nova linha?";
+    yes = "Sim";
+    no = "Não";
+    lang = "Idioma";
+    res = "Resolução (em bits)";
+    disconnect = "DESCONECTAR";
+    r = "R";
+    g = "G";
+    b = "B";
+    btSettings = "Dispositivos Bluetooth";
+    settings = "Configurações";
+    home = "Início";
   }
 }
