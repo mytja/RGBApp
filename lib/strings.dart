@@ -16,6 +16,9 @@ String lang;
 String r;
 String g;
 String b;
+String btSettings;
+String settings;
+String home;
 
 void updateGlobals() {
   if (lang_v == "en_us") {
@@ -28,6 +31,9 @@ void updateGlobals() {
     r = "R";
     g = "G";
     b = "B";
+    btSettings = "Bluetooth Devices";
+    settings = "Settings";
+    home = "Home";
   } else if (lang_v == "sl_si") {
     wnl = "Z novo vrstico?";
     yes = "Ja";
@@ -38,6 +44,9 @@ void updateGlobals() {
     r = "R";
     g = "G";
     b = "B";
+    btSettings = "Bluetooth naprave";
+    settings = "Nastavitve";
+    home = "Domov";
   } else if (lang_v == "tr_tr") {
     wnl = "Yeni hat ile?";
     yes = "Evet";
@@ -48,5 +57,10 @@ void updateGlobals() {
     r = "R";
     g = "G";
     b = "B";
- } 
+
+    // New strings to translate
+    btSettings = "Bluetooth Settings";
+    settings = "Settings";
+    home = "Home";
+  }
 }

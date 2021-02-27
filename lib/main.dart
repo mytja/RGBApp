@@ -112,19 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'RGBApp',
       home: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: s.home,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bluetooth),
-              label: 'Bluetooth Settings',
+              label: s.btSettings,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
+                icon: Icon(Icons.settings), label: s.settings),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.amber[800],
