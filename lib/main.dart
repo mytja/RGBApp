@@ -346,7 +346,7 @@ class _btpicker extends StatelessWidget {
                 child: Text(
                   'Error: ${snapshot.error}',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
               )
