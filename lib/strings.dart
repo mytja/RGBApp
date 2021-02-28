@@ -1,3 +1,5 @@
+// Strings
+
 const String lang_en = "English";
 const String lang_en_us = "USA";
 const String lang_sl = "slovenščina";
