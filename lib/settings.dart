@@ -2,15 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 
 import 'main.dart' as main;
 import 'strings.dart' as s;
 
-import 'dart:convert';
-
 enum BitRes { seven, eight, nine, ten, eleven }
-enum Lang { en_us, sl_si, tr_tr }
+enum Lang { en_us, sl_si, tr_tr, pt_br }
 enum WNL { y, n }
 
 class SettingsPage extends StatefulWidget {
@@ -59,6 +56,7 @@ class _settings extends State<SettingsPage> {
     if (prefs[0] == 0) {
       print("No prefs have been set! Setting defaults");
       await factoryDefault();
+      setState(() {});
     }
     print(prefs);
     return prefs;
@@ -81,18 +79,18 @@ class _settings extends State<SettingsPage> {
     return MaterialApp(
         home: Scaffold(
             bottomNavigationBar: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
+              items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
-                  label: 'Home',
+                  label: s.home,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.bluetooth),
-                  label: 'Bluetooth Settings',
+                  label: s.btSettings,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
-                  label: 'Settings',
+                  label: s.settings,
                 ),
               ],
               currentIndex: _selectedIndex,
@@ -130,9 +128,12 @@ class _settings extends State<SettingsPage> {
                   if (snapJSON[2] == "en_us") {
                     lng = Lang.en_us;
                   }
-                  
+
                   if (snapJSON[2] == "tr_tr") {
                     lng = Lang.tr_tr;
+                  }
+                  if (snapJSON[2] == "pt_br") {
+                    lng = Lang.pt_br;
                   }
 
                   if (snapJSON[3] == true) {
@@ -231,6 +232,21 @@ class _settings extends State<SettingsPage> {
                               setState(() {
                                 lng = value;
                                 s.lang_v = "en_us";
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: const Text(s.lang_pt),
+                          subtitle: const Text(s.lang_pt_br),
+                          leading: Radio(
+                            value: Lang.pt_br,
+                            groupValue: lng,
+                            onChanged: (Lang value) async {
+                              await changeKey("lang", "pt_br");
+                              setState(() {
+                                lng = value;
+                                s.lang_v = "pt_br";
                               });
                             },
                           ),

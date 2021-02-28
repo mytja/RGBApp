@@ -147,6 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       value: SVR,
                       min: Smin,
                       max: Smax,
+                      inactiveColor: Colors.red,
+                      activeColor: Colors.red,
                       divisions: Sdiv,
                       label: SVR.round().toString(),
                       onChanged: (double value) {
@@ -157,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChangeEnd: (double value) async {
                         SVR = value;
                         var retrn = await returnAll();
+                        Smax = pow(2, retrn[1]).toDouble();
                         await BTConnect.send(SVR.toInt(), SVG.toInt(),
                             SVB.toInt(), widget.c, retrn[3]);
                       }),
@@ -170,6 +173,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       value: SVG,
                       min: Smin,
                       max: Smax,
+                      inactiveColor: Colors.green,
+                      activeColor: Colors.green,
                       divisions: Sdiv,
                       label: SVG.round().toString(),
                       onChanged: (double value) {
@@ -180,6 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChangeEnd: (double value) async {
                         SVG = value;
                         var retrn = await returnAll();
+                        Smax = pow(2, retrn[1]).toDouble();
                         await BTConnect.send(SVR.toInt(), SVG.toInt(),
                             SVB.toInt(), widget.c, retrn[3]);
                       }),
@@ -193,6 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       value: SVB,
                       min: Smin,
                       max: Smax,
+                      inactiveColor: Colors.blue,
+                      activeColor: Colors.blue,
                       divisions: Sdiv,
                       label: SVB.round().toString(),
                       onChanged: (double value) {
@@ -203,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChangeEnd: (double value) async {
                         SVB = value;
                         var retrn = await returnAll();
+                        Smax = pow(2, retrn[1]).toDouble();
                         await BTConnect.send(SVR.toInt(), SVG.toInt(),
                             SVB.toInt(), widget.c, retrn[3]);
                       }),
@@ -240,7 +249,7 @@ class BTConnect {
     device.connect();
   }
 
-  static void send(int r, int g, int b, var c, bool nl) async {
+  static Future<void> send(int r, int g, int b, var c, bool nl) async {
     String toSend;
     if (nl == false) {
       toSend = r.toString() + " " + g.toString() + " " + b.toString();
