@@ -8,6 +8,8 @@ const String lang_tr = "Turkish";
 const String lang_tr_tr = "Turkey";
 const String lang_pt_br = "Portugal";
 const String lang_pt = "Português";
+const String lang_ru_ru = "Русский";
+const String lang_ru = "Россия";
 
 String lang_v = "en_us";
 
@@ -79,5 +81,18 @@ void updateGlobals() {
     btSettings = "Dispositivos \nBluetooth";
     settings = "Configurações";
     home = "Início";
+  } else if (lang_v == 'ru_ru') {
+    wnl = "С новой строки?";
+    yes = "Да";
+    no = "Нет";
+    lang = "Язык";
+    res = "Разрашение (в битах)";
+    disconnect = "ОТКЛЮЧИТЬСЯ";
+    r = "R";
+    g = "G";
+    b = "B";
+    btSettings = "Устройства";
+    settings = "Настройки";
+    home = "Главная";
   }
 }
